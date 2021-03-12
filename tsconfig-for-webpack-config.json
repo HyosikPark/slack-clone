@@ -1,0 +1,9 @@
+// webpack이 ts파일일 경우 실행될 수 있도록 설정.
+{
+  "compilerOptions": {
+    "module": "commonjs",
+    "moduleResolution": "Node",
+    "target": "es5",
+    "esModuleInterop": true
+  }
+}
