@@ -1,5 +1,5 @@
 import React from 'react';
-import { render, fireEvent, RenderResult, waitFor, screen, findByText } from '@testing-library/react';
+import { render, fireEvent, RenderResult, waitFor, screen } from '@testing-library/react';
 import SignUp from '@pages/SignUp/SignUp';
 import axios from 'axios';
 import { MemoryRouter, Route } from 'react-router-dom';

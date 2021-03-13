@@ -8,9 +8,9 @@ import { trigger } from 'swr';
 import { SubmitModalProps } from '@typings/db';
 
 function CreateChannelModal({ show, onCloseModal }: SubmitModalProps) {
-  const input = useRef<HTMLInputElement>(null);
-
   const { workspace } = useParams<{ workspace: string }>();
+
+  const input = useRef<HTMLInputElement>(null);
 
   const onCreateChannel = useCallback(
     (e) => {

@@ -17,10 +17,14 @@ export const Header = styled.header`
   font-weight: bold;
   align-items: center;
 
-  & .header-right {
+  .header-right {
     display: flex;
     flex: 1;
     justify-content: flex-end;
     align-items: center;
+  }
+
+  i {
+    pointer-events: none;
   }
 `;

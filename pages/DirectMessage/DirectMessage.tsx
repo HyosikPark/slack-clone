@@ -12,6 +12,7 @@ import makeSection from '@utils/makeSection';
 import { Scrollbars } from 'react-custom-scrollbars';
 import useSocket from '@hooks/useSocket';
 import { toast } from 'react-toastify';
+import { PER_PAGE } from '@pages/Channel/Channel';
 
 function DirectMessage() {
   const { workspace, id } = useParams<{ workspace: string; id: string }>();
@@ -19,7 +20,7 @@ function DirectMessage() {
   const { data: userData } = useSWR(`/api/workspaces/${workspace}/users/${id}`, fetcher);
   const { data: myData } = useSWR(`/api/users`, fetcher);
   const { data: chatData, mutate: mutateChat, revalidate, setSize } = useSWRInfinite<IDM[]>(
-    (index) => `/api/workspaces/${workspace}/dms/${id}/chats?perPage=20&page=${index + 1}`,
+    (index) => `/api/workspaces/${workspace}/dms/${id}/chats?perPage=${PER_PAGE}&page=${index + 1}`,
     fetcher,
   );
   const [chat, setChat] = useState('');
@@ -27,7 +28,7 @@ function DirectMessage() {
   const scrollbarRef = useRef<Scrollbars>(null);
 
   const isEmpty = chatData?.[0]?.length === 0;
-  const isReachingEnd = isEmpty || (chatData && chatData[chatData.length - 1]?.length < 20) || false;
+  const isReachingEnd = isEmpty || (chatData && chatData[chatData.length - 1]?.length < PER_PAGE) || false;
 
   const onChangeChat = useCallback((e) => {
     setChat(e.target.value);
@@ -61,10 +62,9 @@ function DirectMessage() {
         .post(`/api/workspaces/${workspace}/dms/${id}/chats`, {
           content: chat,
         })
-        .then(() => revalidate())
         .catch((err) => console.log(err));
     },
-    [chat, chatData, id, mutateChat, myData, revalidate, userData, workspace],
+    [chat, chatData, id, mutateChat, myData, userData, workspace],
   );
 
   const onMessage = useCallback(

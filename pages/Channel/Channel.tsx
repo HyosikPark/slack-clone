@@ -10,7 +10,7 @@ import { IChannel, IChat, IUser } from '@typings/db';
 import makeSection from '@utils/makeSection';
 import { Scrollbars } from 'react-custom-scrollbars';
 import useSocket from '@hooks/useSocket';
-import { toast, ToastContainer } from 'react-toastify';
+import { toast } from 'react-toastify';
 import InviteChannelModal from '@components/InviteChannelModal/InviteChannelModal';
 
 interface ChannelProps {
@@ -19,14 +19,17 @@ interface ChannelProps {
   show: boolean;
 }
 
+export const PER_PAGE = 20;
+
 function Channel({ onOpenModal, show, onCloseModal }: ChannelProps) {
   const { workspace, channel } = useParams<{ workspace: string; channel: string }>();
 
   const { data: myData } = useSWR(`/api/users`, fetcher);
   const { data: channelData } = useSWR<IChannel>(`/api/workspaces/${workspace}/channels/${channel}`, fetcher);
   const { data: chatData, mutate: mutateChat, revalidate, setSize } = useSWRInfinite<IChat[]>(
-    (index) => `/api/workspaces/${workspace}/channels/${channel}/chats?perPage=20&page=${index + 1}`,
+    (index) => `/api/workspaces/${workspace}/channels/${channel}/chats?perPage=${PER_PAGE}&page=${index + 1}`,
     fetcher,
+    { revalidateAll: true },
   );
   const { data: channelMembersData } = useSWR<IUser[]>(
     myData ? `/api/workspaces/${workspace}/channels/${channel}/members` : null,
@@ -37,7 +40,7 @@ function Channel({ onOpenModal, show, onCloseModal }: ChannelProps) {
   const scrollbarRef = useRef<Scrollbars>(null);
 
   const isEmpty = chatData?.[0]?.length === 0;
-  const isReachingEnd = isEmpty || (chatData && chatData[chatData.length - 1]?.length < 20) || false;
+  const isReachingEnd = isEmpty || (chatData && chatData[chatData.length - 1]?.length < PER_PAGE) || false;
 
   const onChangeChat = useCallback((e) => {
     setChat(e.target.value);
@@ -71,10 +74,9 @@ function Channel({ onOpenModal, show, onCloseModal }: ChannelProps) {
         .post(`/api/workspaces/${workspace}/channels/${channel}/chats`, {
           content: chat,
         })
-        .then(() => revalidate())
         .catch((err) => console.log(err));
     },
-    [channel, channelData, chat, chatData, mutateChat, myData, revalidate, workspace],
+    [channel, channelData, chat, chatData, mutateChat, myData, workspace],
   );
 
   const onMessage = useCallback(
@@ -117,6 +119,10 @@ function Channel({ onOpenModal, show, onCloseModal }: ChannelProps) {
   }, [onMessage, socket]);
 
   useEffect(() => {
+    setSize(1);
+  }, [setSize]);
+
+  useEffect(() => {
     if (chatData?.length === 1 && scrollbarRef.current) {
       scrollbarRef.current?.scrollToBottom();
     }
@@ -157,7 +163,6 @@ function Channel({ onOpenModal, show, onCloseModal }: ChannelProps) {
         placeholder={`Message #${channel}`}
       />
       <InviteChannelModal show={show} onCloseModal={onCloseModal} />
-      <ToastContainer position="bottom-center" />
     </Container>
   );
 }

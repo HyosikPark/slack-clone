@@ -36,6 +36,8 @@ const DirectMessage = loadable(() => import('@pages/DirectMessage/DirectMessage'
 
 function Workspace() {
   const { workspace } = useParams<{ workspace: string }>();
+  const [socket, disconnectSocket] = useSocket(workspace);
+
   const { data: userData, mutate } = useSWR<IUser | false>('/api/users', fetcher);
   const { data: channelData } = useSWR<IUser[]>(userData ? `/api/workspaces/${workspace}/channels` : null, fetcher);
 
@@ -45,8 +47,6 @@ function Workspace() {
   const [showWorkspaceModal, setShowWorkspaceModal] = useState(false);
   const [showInviteWorkspaceModal, setShowInviteWorkspaceModal] = useState(false);
   const [showInviteChannelModal, setShowInviteChannelModal] = useState(false);
-
-  const [socket, disconnectSocket] = useSocket(workspace);
 
   useEffect(() => {
     if (channelData && userData && socket) {
@@ -129,12 +129,12 @@ function Workspace() {
         </Workspaces>
         <Channels>
           <WorkspaceName id="open-ws-btn" onClick={onOpenModalAndMenu}>
-            Sleact
+            {userData?.Workspaces?.find((item) => item.url === workspace)?.name}
           </WorkspaceName>
           <MenuScroll>
             <Menu show={showWorkspaceModal} style={{ top: 95, left: 80 }}>
               <WorkspaceModal>
-                <h2>Sleact</h2>
+                <h2>{userData?.Workspaces?.find((item) => item.url === workspace)?.name}</h2>
                 <button id="open-iws-btn" onClick={onOpenModalAndMenu}>
                   워크스페이스에 사용자 초대
                 </button>
@@ -144,7 +144,9 @@ function Workspace() {
                 <button onClick={onLogout}>로그아웃</button>
               </WorkspaceModal>
             </Menu>
+            {/* channelList Component */}
             <ChannelList />
+            {/* DMList Component */}
             <DMList />
           </MenuScroll>
         </Channels>

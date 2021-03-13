@@ -31,13 +31,16 @@ const config: webpack.Configuration = {
     rules: [
       {
         test: /\.tsx?$/,
-        loader: 'babel-loader', // 웹팩이 js 파일들에 대해 babel을 실행하도록 만들어줌.
+        loader: 'babel-loader',
         options: {
           presets: [
             [
               '@babel/preset-env',
               {
                 targets: { browsers: ['last 2 chrome versions'] },
+                modules: false,
+                corejs: 3,
+                useBuiltIns: 'usage',
                 debug: isDevelopment,
               },
             ],
