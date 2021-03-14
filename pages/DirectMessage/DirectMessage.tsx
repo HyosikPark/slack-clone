@@ -81,7 +81,6 @@ function DirectMessage() {
               scrollbarRef.current.getScrollHeight() <
               scrollbarRef.current.getClientHeight() + scrollbarRef.current.getScrollTop() + 150
             ) {
-              console.log('scrollToBottom!', scrollbarRef.current?.getValues());
               scrollbarRef.current.scrollToBottom();
             } else {
               toast.success('새 메시지가 도착했습니다.', {

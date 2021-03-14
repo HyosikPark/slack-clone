@@ -3,13 +3,14 @@ import useSocket from '@hooks/useSocket';
 import { IDM, IUser, IUserWithOnline } from '@typings/db';
 import { fetcher } from '@utils/fetcher';
 import React, { useCallback, useEffect, useState } from 'react';
-import { useParams } from 'react-router';
+import { useLocation, useParams } from 'react-router';
 import { NavLink } from 'react-router-dom';
 import useSWR from 'swr';
 
 function DMList() {
-  const { workspace } = useParams<{ workspace: string }>();
+  const { workspace } = useParams<{ workspace: string; channel: string }>();
   const [socket] = useSocket(workspace);
+  const location = useLocation();
 
   const { data: userData } = useSWR<IUser>('/api/users', fetcher);
   const { data: memberData } = useSWR<IUserWithOnline[]>(
@@ -37,14 +38,22 @@ function DMList() {
     [],
   );
 
-  const onMessage = (data: IDM) => {
-    setCountList((list) => {
-      return {
-        ...list,
-        [data.SenderId]: list[data.SenderId] ? list[data.SenderId] + 1 : 1,
-      };
-    });
-  };
+  const onMessage = useCallback(
+    (data: IDM) => {
+      const nowDMPath = location.pathname.match(/\d+/);
+      const nowDMId = nowDMPath && nowDMPath![0];
+
+      if (userData?.id !== data.SenderId && data.SenderId !== Number(nowDMId)) {
+        setCountList((list) => {
+          return {
+            ...list,
+            [data.SenderId]: list[data.SenderId] ? list[data.SenderId] + 1 : 1,
+          };
+        });
+      }
+    },
+    [location.pathname, userData],
+  );
 
   useEffect(() => {
     socket?.on('onlineList', (data: number[]) => {
@@ -57,7 +66,7 @@ function DMList() {
       socket?.off('dm', onMessage);
       socket?.off('onlineList');
     };
-  }, [socket]);
+  }, [onMessage, socket]);
 
   return (
     <>
