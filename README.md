@@ -50,7 +50,3 @@ https://github.com/HyosikPark/slack-clone/blob/master/API.md
 # Video
 
 https://www.youtube.com/watch?v=LOoMUus9EOM
-
-# Reference
-
-https://github.com/ZeroCho/sleact/tree/master/front
