@@ -12,6 +12,18 @@
 4. Socket-io
 5. Emotion
 
+# Features
+
+> ### Setup Development Environment
+
+- Webpack + Eslint + Prettier + React + Typescript + Jest + RTL
+- No CRA
+
+> ### Performance Optimization
+
+- Code Splitting (Lodable Component)
+- Tree Shaking
+
 # Route
 
 ```
