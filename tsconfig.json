@@ -1,6 +1,6 @@
 {
   "compilerOptions": {
-    "esModuleInterop": true, // import * as name from '...' -> import name from '...'
+    "esModuleInterop": true, // es6 모듈 사양을 준수하여 commonjs로 export한 모듈을 가져올 수 있다.
     "sourceMap": true, // 자바스크립트로 파일 압축 시 원본파일을 추적하여 error 디버깅 용이
     "lib": ["ES2020", "DOM"], // js로 compile시에 포함될 lib 목록, 최신문법 사용 가능.
     "jsx": "react", //jsx를 리액트 것으로 인식
