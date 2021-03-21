@@ -5,7 +5,7 @@
     "lib": ["ES2020", "DOM"], // js로 compile시에 포함될 lib 목록, 최신문법 사용 가능.
     "jsx": "react", //jsx를 리액트 것으로 인식
     "module": "ESNext", // 최신 모듈 사용. import export
-    "moduleResolution": "Node", // 모듈 사용을 노드가 인식할 수 있게 하겠다.
+    "moduleResolution": "Node", // 모듈 해석 방식 지정
     "target": "es5", // compile 시 es5로 변환
     "strict": true, // 타입 체킹 엄격 매우 중요.
     "resolveJsonModule": true, // import json 가능.
