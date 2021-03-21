@@ -11,7 +11,7 @@ const config: webpack.Configuration = {
   mode: isDevelopment ? 'development' : 'production', // 개발, 배포 모드
   devtool: isDevelopment ? 'inline-source-map' : 'hidden-source-map',
   resolve: {
-    extensions: ['.js', '.jsx', '.ts', '.tsx', '.json'], // babel이 처리할 확장자 목록
+    extensions: ['.js', '.jsx', '.ts', '.tsx', '.json'], // 탐색할 모듈 확장자.
     alias: {
       // ../../ 없애고 절대 경로화 해주는 것
       // tsconfig, webpack 둘다 해주는 이유 : 소스코드 검사기는 tsconfig를 참고하고,
@@ -66,7 +66,7 @@ const config: webpack.Configuration = {
   },
   plugins: [
     new ForkTsCheckerWebpackPlugin({
-      // typescript 체킹, webpack 동시 구동
+      // fast typescript 체킹, webpack 동시 구동
       async: false,
       // eslint: {
       //   files: './src/**/*',
@@ -100,6 +100,7 @@ if (isDevelopment && config.plugins) {
   // 개발환경 플러그인
   // hotreload에 필요
   config.plugins.push(new webpack.HotModuleReplacementPlugin());
+  // fast refresh
   config.plugins.push(new ReactRefreshWebpackPlugin());
   // config.plugins.push(new BundleAnalyzerPlugin({ analyzerMode: 'server', openAnalyzer: true }));
 }
